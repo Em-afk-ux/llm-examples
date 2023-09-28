@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 import requests
 
+openai.api_version = "2023-08-01-preview"
 openai.api_key = "fb2a7f4cc9bd4d8ab067871ee72aa90c" # Add your OpenAI API key here
 deployment_id = "TestFrendePGT35Turbo" # Add your deployment ID here
 # Azure Cognitive Search setup
@@ -79,6 +80,6 @@ if prompt := st.chat_input():
     st.chat_message("user").write(prompt)
     
     response = get_answer(st.session_state.messages)
-    msg = response.choices[0].message
+    msg = response["choices"][0]["message"]["content"]
     st.session_state.messages.append(msg)
     st.chat_message("assistant").write(msg.content)

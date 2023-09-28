@@ -1,9 +1,15 @@
 import openai
 import streamlit as st
 import requests
+import openai, os, requests
 
-openai.api_base = "https://frendetestopenai.openai.azure.com/" # Add your endpoint here
+openai.api_type = "azure"
+
+# Azure OpenAI on your own data is only supported by the 2023-08-01-preview API version
 openai.api_version = "2023-08-01-preview"
+
+# Azure OpenAI setup
+openai.api_base = "https://frendetestopenai.openai.azure.com/" # Add your endpoint here
 openai.api_key = "fb2a7f4cc9bd4d8ab067871ee72aa90c" # Add your OpenAI API key here
 deployment_id = "TestFrendePGT35Turbo" # Add your deployment ID here
 # Azure Cognitive Search setup
@@ -40,7 +46,7 @@ setup_byod(deployment_id)
 #Bruker roleinformation istedet
 def get_answer(userQuery):
     completion = openai.ChatCompletion.create(
-        messages=[{"role": "system", "content": "Alle svar skal være utfyllende."},userQuery],
+        messages=[{"role": "system", "content": "Alle svar skal være utfyllende."},{"role": "user", "content": userQuery}],
         deployment_id=deployment_id,
         temperature=0.5,
         max_tokens=1500,

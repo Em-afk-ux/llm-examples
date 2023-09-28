@@ -66,8 +66,8 @@ def get_answer(userQuery):
     )
     return completion
 
-st.title("💬 Chatbot")
-st.caption("🚀 A streamlit chatbot powered by OpenAI LLM")
+st.title("Hr Chatbot")
+st.caption("Hr Chat")
 if "messages" not in st.session_state:
     st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 

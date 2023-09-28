@@ -2,6 +2,7 @@ import openai
 import streamlit as st
 import requests
 
+openai.api_base = "https://frendetestopenai.openai.azure.com/" # Add your endpoint here
 openai.api_version = "2023-08-01-preview"
 openai.api_key = "fb2a7f4cc9bd4d8ab067871ee72aa90c" # Add your OpenAI API key here
 deployment_id = "TestFrendePGT35Turbo" # Add your deployment ID here

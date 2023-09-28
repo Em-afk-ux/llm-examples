@@ -15,7 +15,7 @@ deployment_id = "TestFrendePGT35Turbo" # Add your deployment ID here
 # Azure Cognitive Search setup
 search_endpoint = "https://frendetestopenaisearch2gb.search.windows.net"; # Add your Azure Cognitive Search endpoint here
 search_key = "dZP52jK2Uiv45FVEjccVqivB5anttdfzrnVv7Vd3zwAzSeAUWvP4"; # Add your Azure Cognitive Search admin key here
-search_index_name = "haandbok-ingen-tall"; # Add your Azure Cognitive Search index name here
+search_index_name = "splits"; # Add your Azure Cognitive Search index name here
 
 def setup_byod(deployment_id: str) -> None:
     """Sets up the OpenAI Python SDK to use your own data for the chat endpoint.
@@ -46,9 +46,9 @@ setup_byod(deployment_id)
 #Bruker roleinformation istedet
 def get_answer(userQuery):
     completion = openai.ChatCompletion.create(
-        messages=[{"role": "system", "content": "Alle svar skal være utfyllende."},{"role": "user", "content": userQuery}],
+        messages=userQuery,
         deployment_id=deployment_id,
-        temperature=0.5,
+        temperature=0.2,
         max_tokens=1500,
         top_p=0.2,
         frequency_penalty=0,
@@ -74,19 +74,21 @@ def get_answer(userQuery):
     )
     return completion
 
-st.title("Hr Chatbot")
-st.caption("Hr Chat")
-if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "How can I help you?"}]
 
-for msg in st.session_state["messages"]:
+
+st.title("Søskenbarnet til Alexa og Siri")
+st.caption("ChatGPT svarer på spørsmål om personalhåndboken")
+if "messages" not in st.session_state:
+    st.session_state["messages"] = [{"role": "assistant", "content": "Hva kan jeg hjelpe deg med?"}]
+
+for msg in st.session_state.messages:
     st.chat_message(msg["role"]).write(msg["content"])
 
 if prompt := st.chat_input():
-    st.session_state["messages"].append({"role": "user", "content": prompt})
+    #st.session_state.messages.append({"role": "system", "content": "Du er en AI assistent som skal svare Frende-ansatte på spørsmål basert på innholdet i personalhåndboken."})
+    st.session_state.messages.append({"role": "user", "content": prompt})
     st.chat_message("user").write(prompt)
-    
     response = get_answer(st.session_state.messages)
-    msg = response["choices"][0]["message"]["content"]
-    st.session_state["messages"].append(msg)
+    msg = response.choices[0].message
+    st.session_state.messages.append(msg)
     st.chat_message("assistant").write(msg.content)
